@@ -1,0 +1,1666 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width,
+                 height=device-height,
+                 initial-scale=1.0,
+                 user-scalable=no,
+                 shrink-to-fit=yes"
+    >
+
+    <title>Gateway Adventure</title>
+
+
+    <!-- =====================================================
+         FAVICON
+         ===================================================== -->
+
+    <link
+        rel="icon"
+        type="image/png"
+        href="Logo.png?v=3"
+    >
+
+    <link
+        rel="shortcut icon"
+        type="image/png"
+        href="Logo.png?v=3"
+    >
+
+    <link
+        rel="apple-touch-icon"
+        href="Logo.png?v=3"
+    >
+
+
+    <!-- =====================================================
+         STYLES
+         ===================================================== -->
+
+    <style>
+
+        /* =========================
+           RESET
+           ========================= */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        html,
+        body {
+
+            width: 100%;
+            height: 100%;
+
+            overflow: hidden;
+
+        }
+
+
+        body {
+
+            background: white;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+        }
+
+
+        /* =========================
+           UNITY CANVAS
+           ========================= */
+
+        #unity-canvas {
+
+            position: absolute;
+
+            left: 0;
+            top: 0;
+
+            width: 100% !important;
+            height: 100% !important;
+
+            display: block;
+
+            background: white;
+
+        }
+
+
+        /* =========================
+           LOADING OVERLAY
+           ========================= */
+
+        #loading-overlay {
+
+            position: fixed;
+
+            inset: 0;
+
+            width: 100%;
+            height: 100%;
+
+            padding: 12px;
+
+            background: black;
+
+            z-index: 9999;
+
+            opacity: 1;
+
+            transition:
+                opacity 0.4s ease;
+
+        }
+
+
+        #loading-overlay.fade-out {
+
+            opacity: 0;
+
+            pointer-events: none;
+
+        }
+
+
+        /* =========================
+           GAME AREA
+           ========================= */
+
+        #gameArea {
+
+            position: relative;
+
+            width: 100%;
+            height: 100%;
+
+            background: white;
+
+            border-radius: 60px;
+
+            overflow: hidden;
+
+            touch-action: none;
+
+            cursor: default;
+
+        }
+
+
+        /* =========================
+           LOADING LOGO
+           ========================= */
+
+        #player {
+
+            position: absolute;
+
+            width: 50%;
+
+            max-width: 500px;
+
+            left: 50%;
+            top: 50%;
+
+            transform:
+                translate(-50%, -50%);
+
+            z-index: 10;
+
+            user-select: none;
+
+            -webkit-user-select: none;
+
+            -webkit-user-drag: none;
+
+            cursor: grab;
+
+            animation:
+                logoLoaderReveal
+                0.8s
+                infinite
+                linear
+                alternate,
+
+                logoLoaderSpin
+                1.6s
+                infinite
+                linear;
+
+        }
+
+
+        #player:active {
+
+            cursor: grabbing;
+
+        }
+
+
+        /* =========================
+           LOGO IMAGE
+           ========================= */
+
+        #player img {
+
+            display: block;
+
+            width: 100%;
+            height: auto;
+
+            filter: invert(1);
+
+            user-select: none;
+
+            -webkit-user-select: none;
+
+            -webkit-user-drag: none;
+
+            pointer-events: none;
+
+        }
+
+
+        /* =========================
+           LOADING REVEAL
+           ========================= */
+
+        @keyframes logoLoaderReveal {
+
+            0% {
+
+                clip-path: polygon(
+                    50% 50%,
+                    0 0,
+                    50% 0%,
+                    50% 0%,
+                    50% 0%,
+                    50% 0%,
+                    50% 0%
+                );
+
+            }
+
+            12.5% {
+
+                clip-path: polygon(
+                    50% 50%,
+                    0 0,
+                    50% 0%,
+                    100% 0%,
+                    100% 0%,
+                    100% 0%,
+                    100% 0%
+                );
+
+            }
+
+            25% {
+
+                clip-path: polygon(
+                    50% 50%,
+                    0 0,
+                    50% 0%,
+                    100% 0%,
+                    100% 100%,
+                    100% 100%,
+                    100% 100%
+                );
+
+            }
+
+            50% {
+
+                clip-path: polygon(
+                    50% 50%,
+                    0 0,
+                    50% 0%,
+                    100% 0%,
+                    100% 100%,
+                    50% 100%,
+                    0% 100%
+                );
+
+            }
+
+            62.5% {
+
+                clip-path: polygon(
+                    50% 50%,
+                    100% 0,
+                    100% 0%,
+                    100% 0%,
+                    100% 100%,
+                    50% 100%,
+                    0% 100%
+                );
+
+            }
+
+            75% {
+
+                clip-path: polygon(
+                    50% 50%,
+                    100% 100%,
+                    100% 100%,
+                    100% 100%,
+                    100% 100%,
+                    50% 100%,
+                    0% 100%
+                );
+
+            }
+
+            100% {
+
+                clip-path: polygon(
+                    50% 50%,
+                    50% 100%,
+                    50% 100%,
+                    50% 100%,
+                    50% 100%,
+                    50% 100%,
+                    0% 100%
+                );
+
+            }
+
+        }
+
+
+        /* =========================
+           LOADING ROTATION
+           ========================= */
+
+        @keyframes logoLoaderSpin {
+
+            0% {
+
+                transform:
+                    translate(-50%, -50%)
+                    scaleY(1)
+                    rotate(0deg);
+
+            }
+
+            49.99% {
+
+                transform:
+                    translate(-50%, -50%)
+                    scaleY(1)
+                    rotate(135deg);
+
+            }
+
+            50% {
+
+                transform:
+                    translate(-50%, -50%)
+                    scaleY(-1)
+                    rotate(0deg);
+
+            }
+
+            100% {
+
+                transform:
+                    translate(-50%, -50%)
+                    scaleY(-1)
+                    rotate(-135deg);
+
+            }
+
+        }
+
+
+        /* =========================
+           GAME MODE PLAYER
+           ========================= */
+
+        #player.game-mode {
+
+            width: 90px;
+
+            max-width: none;
+
+            left: 0;
+            top: 0;
+
+            animation: none;
+
+            clip-path: none;
+
+            cursor: grab;
+
+        }
+
+
+        #player.game-mode:active {
+
+            cursor: grabbing;
+
+        }
+
+
+        /* =========================
+           ENEMIES
+           ========================= */
+
+        .enemy {
+
+            position: absolute;
+
+            left: 0;
+            top: 0;
+
+            width: 65px;
+            height: 65px;
+
+            border-radius: 50%;
+
+            background: black;
+
+            z-index: 5;
+
+            pointer-events: none;
+
+        }
+
+
+        /* =========================
+           SCORE
+           ========================= */
+
+        #score {
+
+            position: absolute;
+
+            top: 0;
+            left: 50%;
+
+            transform:
+                translateX(-50%);
+
+            min-width: 180px;
+
+            padding: 18px 32px;
+
+            background: black;
+
+            color: white;
+
+            font-size: 22px;
+
+            font-weight: 700;
+
+            letter-spacing: 0.03em;
+
+            text-align: center;
+
+            white-space: nowrap;
+
+            border-radius:
+                0 0 32px 32px;
+
+            z-index: 20;
+
+            display: none;
+
+            pointer-events: none;
+
+        }
+
+
+        /* =========================
+           DARK MODE
+           ========================= */
+
+        @media (prefers-color-scheme: dark) {
+
+            body {
+
+                background: black;
+
+            }
+
+            #loading-overlay {
+
+                background: white;
+
+            }
+
+            #gameArea {
+
+                background: black;
+
+            }
+
+            #player img {
+
+                filter: invert(0);
+
+            }
+
+            .enemy {
+
+                background: white;
+
+            }
+
+            #score {
+
+                background: white;
+
+                color: black;
+
+            }
+
+            #unity-canvas {
+
+                background: black;
+
+            }
+
+        }
+
+
+        /* =========================
+           SMALL SCREENS
+           ========================= */
+
+        @media (max-width: 600px) {
+
+            #loading-overlay {
+
+                padding: 8px;
+
+            }
+
+            #gameArea {
+
+                border-radius: 35px;
+
+            }
+
+            #player:not(.game-mode) {
+
+                width: 65%;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =====================================================
+         UNITY CANVAS
+         ===================================================== -->
+
+    <canvas
+        id="unity-canvas"
+        tabindex="-1"
+    ></canvas>
+
+
+    <!-- =====================================================
+         LOADING GAME
+         ===================================================== -->
+
+    <div id="loading-overlay">
+
+        <div id="gameArea">
+
+
+            <!-- PLAYER -->
+
+            <div id="player">
+
+                <img
+                    src="Logo.png"
+                    draggable="false"
+                    alt="Gateway Adventure"
+                >
+
+            </div>
+
+
+            <!-- SCORE -->
+
+            <div id="score">
+                XP Dots: 0
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         UNITY LOADER
+         
+         IMPORTANT:
+         Unity automatically replaces
+         f17935505ac73b300cb95d46ee567c82.loader.js
+         with the correct loader filename.
+         ===================================================== -->
+
+    <script src="Build/f17935505ac73b300cb95d46ee567c82.loader.js"></script>
+
+
+    <script>
+
+        /* =====================================================
+           DOM
+           ===================================================== */
+
+        const loadingOverlay =
+            document.getElementById(
+                "loading-overlay"
+            );
+
+
+        const gameArea =
+            document.getElementById(
+                "gameArea"
+            );
+
+
+        const player =
+            document.getElementById(
+                "player"
+            );
+
+
+        const score =
+            document.getElementById(
+                "score"
+            );
+
+
+        /* =====================================================
+           CONFIGURATION
+           ===================================================== */
+
+        const CONFIG = {
+
+            enemySize: 65,
+
+            enemySpawnInterval: 1000,
+
+            minSpeed: 1,
+
+            maxSpeed: 3,
+
+            playerSize: 90
+
+        };
+
+
+        /* =====================================================
+           GAME STATE
+           ===================================================== */
+
+        let gameRunning = false;
+
+        let dragging = false;
+
+        let enemies = [];
+
+        let xpDots = 0;
+
+        let playerX = 0;
+
+        let playerY = 0;
+
+        let spawnTimer = null;
+
+        let animationFrame = null;
+
+        let areaRect = null;
+
+
+        /* =====================================================
+           UPDATE AREA SIZE
+           ===================================================== */
+
+        function updateAreaSize() {
+
+            areaRect =
+                gameArea.getBoundingClientRect();
+
+        }
+
+
+        window.addEventListener(
+            "resize",
+            updateAreaSize
+        );
+
+
+        updateAreaSize();
+
+
+        /* =====================================================
+           CLAMP
+           ===================================================== */
+
+        function clamp(
+            value,
+            min,
+            max
+        ) {
+
+            return Math.min(
+
+                Math.max(
+                    value,
+                    min
+                ),
+
+                max
+
+            );
+
+        }
+
+
+        /* =====================================================
+           PLAYER POSITION
+           ===================================================== */
+
+        function setPlayerPosition(
+            x,
+            y
+        ) {
+
+            playerX = x;
+
+            playerY = y;
+
+
+            player.style.transform =
+                `translate(${x}px, ${y}px)`;
+
+        }
+
+
+        /* =====================================================
+           RANDOM SPEED
+           ===================================================== */
+
+        function randomSpeed() {
+
+            const speed =
+
+                CONFIG.minSpeed +
+
+                Math.random() *
+                (
+                    CONFIG.maxSpeed -
+                    CONFIG.minSpeed
+                );
+
+
+            return Math.random() > 0.5
+                ? speed
+                : -speed;
+
+        }
+
+
+        /* =====================================================
+           UPDATE SCORE
+           ===================================================== */
+
+        function updateScore() {
+
+            score.textContent =
+                `XP Dots: ${xpDots}`;
+
+        }
+
+
+        /* =====================================================
+           SPAWN ENEMY
+           ===================================================== */
+
+        function spawnEnemy() {
+
+            if (!gameRunning) {
+
+                return;
+
+            }
+
+
+            const enemyElement =
+                document.createElement(
+                    "div"
+                );
+
+
+            enemyElement.className =
+                "enemy";
+
+
+            const maxX =
+
+                Math.max(
+                    0,
+                    areaRect.width -
+                    CONFIG.enemySize
+                );
+
+
+            const maxY =
+
+                Math.max(
+                    0,
+                    areaRect.height -
+                    CONFIG.enemySize
+                );
+
+
+            /*
+                Spawn near top center.
+            */
+
+            const x =
+
+                clamp(
+
+                    areaRect.width / 2 -
+                    CONFIG.enemySize / 2,
+
+                    0,
+
+                    maxX
+
+                );
+
+
+            const y =
+
+                clamp(
+                    60,
+                    0,
+                    maxY
+                );
+
+
+            const enemy = {
+
+                element: enemyElement,
+
+                x: x,
+
+                y: y,
+
+                vx: randomSpeed(),
+
+                vy: randomSpeed()
+
+            };
+
+
+            enemyElement.style.transform =
+                `translate(${enemy.x}px, ${enemy.y}px)`;
+
+
+            gameArea.appendChild(
+                enemyElement
+            );
+
+
+            enemies.push(
+                enemy
+            );
+
+
+            xpDots++;
+
+            updateScore();
+
+        }
+
+
+        /* =====================================================
+           UPDATE ENEMIES
+           ===================================================== */
+
+        function updateEnemies() {
+
+            const maxX =
+
+                Math.max(
+                    0,
+                    areaRect.width -
+                    CONFIG.enemySize
+                );
+
+
+            const maxY =
+
+                Math.max(
+                    0,
+                    areaRect.height -
+                    CONFIG.enemySize
+                );
+
+
+            for (
+                const enemy of enemies
+            ) {
+
+                enemy.x += enemy.vx;
+
+                enemy.y += enemy.vy;
+
+
+                if (
+
+                    enemy.x <= 0 ||
+
+                    enemy.x >= maxX
+
+                ) {
+
+                    enemy.x =
+                        clamp(
+                            enemy.x,
+                            0,
+                            maxX
+                        );
+
+                    enemy.vx *= -1;
+
+                }
+
+
+                if (
+
+                    enemy.y <= 0 ||
+
+                    enemy.y >= maxY
+
+                ) {
+
+                    enemy.y =
+                        clamp(
+                            enemy.y,
+                            0,
+                            maxY
+                        );
+
+                    enemy.vy *= -1;
+
+                }
+
+
+                enemy.element.style.transform =
+                    `translate(${enemy.x}px, ${enemy.y}px)`;
+
+            }
+
+        }
+
+
+        /* =====================================================
+           COLLISION
+           ===================================================== */
+
+        function checkCollision() {
+
+            const playerCenterX =
+
+                playerX +
+                CONFIG.playerSize / 2;
+
+
+            const playerCenterY =
+
+                playerY +
+                CONFIG.playerSize / 2;
+
+
+            const collisionDistance =
+
+                CONFIG.playerSize / 2 +
+                CONFIG.enemySize / 2;
+
+
+            for (
+                const enemy of enemies
+            ) {
+
+                const enemyCenterX =
+
+                    enemy.x +
+                    CONFIG.enemySize / 2;
+
+
+                const enemyCenterY =
+
+                    enemy.y +
+                    CONFIG.enemySize / 2;
+
+
+                const dx =
+
+                    playerCenterX -
+                    enemyCenterX;
+
+
+                const dy =
+
+                    playerCenterY -
+                    enemyCenterY;
+
+
+                if (
+
+                    Math.hypot(
+                        dx,
+                        dy
+                    ) < collisionDistance
+
+                ) {
+
+                    return true;
+
+                }
+
+            }
+
+
+            return false;
+
+        }
+
+
+        /* =====================================================
+           CLEAR ENEMIES
+           ===================================================== */
+
+        function clearEnemies() {
+
+            for (
+                const enemy of enemies
+            ) {
+
+                enemy.element.remove();
+
+            }
+
+
+            enemies = [];
+
+        }
+
+
+        /* =====================================================
+           END GAME
+           ===================================================== */
+
+        function endGame() {
+
+            gameRunning = false;
+
+            dragging = false;
+
+
+            cancelAnimationFrame(
+                animationFrame
+            );
+
+
+            clearInterval(
+                spawnTimer
+            );
+
+
+            clearEnemies();
+
+
+            /*
+                Keep the final XP score.
+            */
+
+            updateScore();
+
+
+            /*
+                Return logo to loading animation.
+            */
+
+            player.classList.remove(
+                "game-mode"
+            );
+
+
+            player.style.removeProperty(
+                "transform"
+            );
+
+        }
+
+
+        /* =====================================================
+           GAME LOOP
+           ===================================================== */
+
+        function gameLoop() {
+
+            if (!gameRunning) {
+
+                return;
+
+            }
+
+
+            updateEnemies();
+
+
+            if (checkCollision()) {
+
+                endGame();
+
+                return;
+
+            }
+
+
+            animationFrame =
+                requestAnimationFrame(
+                    gameLoop
+                );
+
+        }
+
+
+        /* =====================================================
+           START NEW GAME
+           ===================================================== */
+
+        function startGame(
+            clientX,
+            clientY
+        ) {
+
+            cancelAnimationFrame(
+                animationFrame
+            );
+
+
+            clearInterval(
+                spawnTimer
+            );
+
+
+            clearEnemies();
+
+
+            updateAreaSize();
+
+
+            /*
+                Reset score for NEW ROUND.
+            */
+
+            xpDots = 0;
+
+            updateScore();
+
+
+            gameRunning = true;
+
+
+            /*
+                Turn logo into player.
+            */
+
+            player.classList.add(
+                "game-mode"
+            );
+
+
+            score.style.display =
+                "block";
+
+
+            const x =
+
+                clamp(
+
+                    clientX -
+                    areaRect.left -
+                    CONFIG.playerSize / 2,
+
+                    0,
+
+                    Math.max(
+                        0,
+                        areaRect.width -
+                        CONFIG.playerSize
+                    )
+
+                );
+
+
+            const y =
+
+                clamp(
+
+                    clientY -
+                    areaRect.top -
+                    CONFIG.playerSize / 2,
+
+                    0,
+
+                    Math.max(
+                        0,
+                        areaRect.height -
+                        CONFIG.playerSize
+                    )
+
+                );
+
+
+            setPlayerPosition(
+                x,
+                y
+            );
+
+
+            /*
+                First enemy immediately.
+            */
+
+            spawnEnemy();
+
+
+            /*
+                Continue spawning.
+            */
+
+            spawnTimer =
+
+                setInterval(
+                    spawnEnemy,
+                    CONFIG.enemySpawnInterval
+                );
+
+
+            /*
+                Start game loop.
+            */
+
+            animationFrame =
+                requestAnimationFrame(
+                    gameLoop
+                );
+
+        }
+
+
+        /* =====================================================
+           PLAYER HIT TEST
+           ===================================================== */
+
+        function playerContainsPoint(
+            clientX,
+            clientY
+        ) {
+
+            const rect =
+                player.getBoundingClientRect();
+
+
+            return (
+
+                clientX >= rect.left &&
+
+                clientX <= rect.right &&
+
+                clientY >= rect.top &&
+
+                clientY <= rect.bottom
+
+            );
+
+        }
+
+
+        /* =====================================================
+           MOVE PLAYER
+           ===================================================== */
+
+        function movePlayer(
+            clientX,
+            clientY
+        ) {
+
+            if (
+
+                !gameRunning ||
+
+                !dragging
+
+            ) {
+
+                return;
+
+            }
+
+
+            updateAreaSize();
+
+
+            const x =
+
+                clamp(
+
+                    clientX -
+                    areaRect.left -
+                    CONFIG.playerSize / 2,
+
+                    0,
+
+                    Math.max(
+                        0,
+                        areaRect.width -
+                        CONFIG.playerSize
+                    )
+
+                );
+
+
+            const y =
+
+                clamp(
+
+                    clientY -
+                    areaRect.top -
+                    CONFIG.playerSize / 2,
+
+                    0,
+
+                    Math.max(
+                        0,
+                        areaRect.height -
+                        CONFIG.playerSize
+                    )
+
+                );
+
+
+            setPlayerPosition(
+                x,
+                y
+            );
+
+        }
+
+
+        /* =====================================================
+           POINTER DOWN
+           ===================================================== */
+
+        gameArea.addEventListener(
+
+            "pointerdown",
+
+            function(event) {
+
+                /*
+                    Start a new game when the
+                    game is not running.
+                */
+
+                if (!gameRunning) {
+
+                    startGame(
+                        event.clientX,
+                        event.clientY
+                    );
+
+
+                    dragging = true;
+
+
+                    gameArea.setPointerCapture(
+                        event.pointerId
+                    );
+
+
+                    return;
+
+                }
+
+
+                /*
+                    Only grab the player
+                    while game is running.
+                */
+
+                if (
+
+                    !playerContainsPoint(
+                        event.clientX,
+                        event.clientY
+                    )
+
+                ) {
+
+                    return;
+
+                }
+
+
+                dragging = true;
+
+
+                gameArea.setPointerCapture(
+                    event.pointerId
+                );
+
+
+                movePlayer(
+                    event.clientX,
+                    event.clientY
+                );
+
+            }
+
+        );
+
+
+        /* =====================================================
+           POINTER MOVE
+           ===================================================== */
+
+        gameArea.addEventListener(
+
+            "pointermove",
+
+            function(event) {
+
+                if (!dragging) {
+
+                    return;
+
+                }
+
+
+                movePlayer(
+                    event.clientX,
+                    event.clientY
+                );
+
+            }
+
+        );
+
+
+        /* =====================================================
+           POINTER UP
+           ===================================================== */
+
+        function stopDragging(event) {
+
+            dragging = false;
+
+
+            try {
+
+                if (
+
+                    gameArea.hasPointerCapture(
+                        event.pointerId
+                    )
+
+                ) {
+
+                    gameArea.releasePointerCapture(
+                        event.pointerId
+                    );
+
+                }
+
+            }
+
+            catch (error) {
+
+                /*
+                    Ignore pointer capture errors.
+                */
+
+            }
+
+        }
+
+
+        gameArea.addEventListener(
+            "pointerup",
+            stopDragging
+        );
+
+
+        gameArea.addEventListener(
+            "pointercancel",
+            stopDragging
+        );
+
+
+        /* =====================================================
+           UNITY
+           =====================================================
+
+           IMPORTANT:
+
+           These variables are automatically replaced
+           by Unity when this file is used as a
+           WebGL template.
+
+           You no longer need to manually change
+           the hashed filenames after every build.
+           ===================================================== */
+
+        createUnityInstance(
+
+            document.querySelector(
+                "#unity-canvas"
+            ),
+
+            {
+
+                dataUrl:
+                    "Build/8a12ec8396832f9811adc651d70d7a7f.data.unityweb",
+
+                frameworkUrl:
+                    "Build/6ff9d4ae0fbb9422ea9158d91a0ca681.framework.js.unityweb",
+
+                codeUrl:
+                    "Build/663027aaa282d0a9600a0dc1679b7693.wasm.unityweb",
+
+                streamingAssetsUrl:
+                    "StreamingAssets",
+
+                companyName:
+                    "Gateway Adventure",
+
+                productName:
+                    "Gateway Adventure",
+
+                productVersion:
+                    "2026090500"
+
+            }
+
+        )
+
+        .then(
+
+            function() {
+
+                /*
+                    Unity finished loading.
+                */
+
+                gameRunning = false;
+
+                dragging = false;
+
+
+                cancelAnimationFrame(
+                    animationFrame
+                );
+
+
+                clearInterval(
+                    spawnTimer
+                );
+
+
+                clearEnemies();
+
+
+                /*
+                    Fade loading screen out.
+                */
+
+                loadingOverlay.classList.add(
+                    "fade-out"
+                );
+
+
+                /*
+                    Remove loading screen
+                    after animation.
+                */
+
+                setTimeout(
+
+                    function() {
+
+                        if (
+                            loadingOverlay
+                        ) {
+
+                            loadingOverlay.remove();
+
+                        }
+
+                    },
+
+                    450
+
+                );
+
+            }
+
+        )
+
+        .catch(
+
+            function(message) {
+
+                console.error(
+                    "Unity failed to load:",
+                    message
+                );
+
+
+                alert(
+                    "Unity failed to load:\n\n" +
+                    message
+                );
+
+            }
+
+        );
+
+    </script>
+
+</body>
+
+</html>
